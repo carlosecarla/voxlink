@@ -2,7 +2,7 @@
 
 $pasta = "audios/";
 
-$arquivos = glob($pasta . "*.webm");
+$arquivos = glob($pasta . "*.mp4");
 
 rsort($arquivos);
 
