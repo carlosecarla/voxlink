@@ -117,24 +117,46 @@ async function escutar() {
 
     await fetch('comando.php?cmd=gravar');
 
+    console.log("Comando enviado");
+
     setTimeout(async () => {
 
-        const resposta = await fetch(
-            'ultimo_audio.php?' + Date.now()
-        );
+        try {
 
-        const audio = await resposta.text();
+            const resposta = await fetch(
+                'ultimo_audio.php?' + Date.now()
+            );
 
-        console.log(audio);
+            const audio = await resposta.text();
 
-        const player =
-            document.getElementById('player');
+            console.log(audio);
 
-        player.src = audio;
+            if (!audio.trim()) {
 
-        player.load();
+                alert("Nenhum áudio encontrado");
 
-        player.play();
+                return;
+            }
 
-    }, 7000);
+            const player =
+                document.getElementById('player');
+
+            player.src =
+                audio + '?v=' + Date.now();
+
+            player.load();
+
+            await player.play();
+
+            console.log("Tocando");
+
+        } catch (erro) {
+
+            console.log(erro);
+
+            alert("Erro ao tocar áudio");
+        }
+
+    }, 8000);
 }
+
