@@ -39,51 +39,58 @@ async function iniciarGravacao() {
         return;
     }
 
-    audioChunks = [];
+    console.log("==========");
 
-    let options = {};
+    console.log("INICIANDO GRAVAÇÃO");
 
-    if (MediaRecorder.isTypeSupported('audio/webm')) {
-
-        options = {
-            mimeType: 'audio/webm'
-        };
-    }
-
-    recorder = new MediaRecorder(
-        stream,
-        options
+    console.log("Hora:",
+        new Date().toLocaleTimeString()
     );
 
+    audioChunks = [];
+
+    recorder = new MediaRecorder(stream);
+
+    recorder.onstart = () => {
+
+        console.log("Recorder START");
+    };
+
     recorder.ondataavailable = (e) => {
+
+        console.log(
+            "Chunk recebido:",
+            e.data.size,
+            "bytes"
+        );
 
         if (e.data.size > 0) {
 
             audioChunks.push(e.data);
 
             console.log(
-                "Chunk:",
-                e.data.size
+                "Total chunks:",
+                audioChunks.length
             );
         }
-    };
-
-    recorder.onstart = () => {
-
-        console.log("Gravação iniciada");
     };
 
     recorder.onerror = (e) => {
 
         console.log(
-            "Erro recorder:",
+            "ERRO recorder:",
             e
         );
     };
 
     recorder.onstop = async () => {
 
-        console.log("Finalizando áudio");
+        console.log("Recorder STOP");
+
+        console.log(
+            "Total chunks finais:",
+            audioChunks.length
+        );
 
         const audioBlob = new Blob(
             audioChunks,
@@ -93,8 +100,14 @@ async function iniciarGravacao() {
         );
 
         console.log(
-            "Tamanho final:",
-            audioBlob.size
+            "Tamanho final áudio:",
+            audioBlob.size,
+            "bytes"
+        );
+
+        console.log(
+            "Tempo final:",
+            new Date().toLocaleTimeString()
         );
 
         const formData = new FormData();
@@ -107,6 +120,8 @@ async function iniciarGravacao() {
 
         try {
 
+            console.log("Enviando upload...");
+
             const resposta = await fetch(
                 'upload.php',
                 {
@@ -118,13 +133,19 @@ async function iniciarGravacao() {
             const texto =
                 await resposta.text();
 
-            console.log(texto);
+            console.log(
+                "Resposta upload:",
+                texto
+            );
 
             alert("Áudio enviado!");
 
         } catch (erro) {
 
-            console.log(erro);
+            console.log(
+                "ERRO upload:",
+                erro
+            );
 
             alert("Erro upload");
         }
@@ -132,9 +153,31 @@ async function iniciarGravacao() {
 
     recorder.start(1000);
 
-    console.log("Gravando por 1 minuto");
+    console.log(
+        "Recorder iniciado com chunks 1s"
+    );
+
+    let segundos = 0;
+
+    const contador = setInterval(() => {
+
+        segundos++;
+
+        console.log(
+            "Gravando:",
+            segundos,
+            "segundos"
+        );
+
+    }, 1000);
 
     setTimeout(() => {
+
+        clearInterval(contador);
+
+        console.log(
+            "Tentando parar recorder..."
+        );
 
         if (
             recorder &&
@@ -144,53 +187,11 @@ async function iniciarGravacao() {
             recorder.stop();
 
             console.log(
-                "Gravação encerrada"
+                "Recorder parado manualmente"
             );
         }
 
-    }, 60000);
-}
-
-if (
-    typeof DEVICE !== "undefined" &&
-    DEVICE == 1
-) {
-
-    setInterval(async () => {
-
-        try {
-
-            const resposta = await fetch(
-                'status.txt?' +
-                Date.now()
-            );
-
-            const comando =
-                await resposta.text();
-
-            console.log(
-                "Comando:",
-                comando
-            );
-
-            if (
-                comando.trim() ===
-                'gravar'
-            ) {
-
-                iniciarGravacao();
-
-                fetch(
-                    'comando.php?cmd=parado'
-                );
-            }
-
-        } catch (e) {
-
-            console.log(e);
-        }
-
-    }, 1000);
+    }, 15000);
 }
 
 async function escutar() {
