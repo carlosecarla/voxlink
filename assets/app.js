@@ -55,7 +55,7 @@ async function iniciarGravacao() {
         console.log("Enviando áudio");
 
         const audioBlob = new Blob(audioChunks, {
-            type: 'audio/mp4'
+            type: 'audio/webm'
         });
 
         const formData = new FormData();
@@ -63,7 +63,7 @@ async function iniciarGravacao() {
         formData.append(
             'audio',
             audioBlob,
-            Date.now() + '.mp4'
+            Date.now() + '.webm'
         );
 
         try {
@@ -92,7 +92,7 @@ async function iniciarGravacao() {
 
     recorder.start(1000);
 
-    console.log("Gravando 1 minuto");
+    console.log("Gravando...");
 
     setTimeout(() => {
 
@@ -103,11 +103,12 @@ async function iniciarGravacao() {
 
             recorder.stop();
 
-            console.log("Gravação finalizada");
+            console.log("Finalizado");
         }
 
     }, 60000);
 }
+
 
 async function escutar() {
 
