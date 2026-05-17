@@ -30,6 +30,18 @@ Dispositivo <?= $device ?>
 🎤 ESCUTA
 </button>
 
+<br><br>
+
+<a href="audios.php">
+
+<button>
+📁 ÁUDIOS
+</button>
+
+</a>
+
+<br><br>
+
 <audio
 id="player"
 controls
