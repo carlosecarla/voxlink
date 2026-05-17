@@ -171,5 +171,5 @@ async function escutar() {
                 '❌ Erro no áudio';
         }
 
-    }, 8000);
+    }, 65000);
 }
