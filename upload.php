@@ -10,7 +10,8 @@ if(!isset($_FILES['audio'])){
     die("sem audio");
 }
 
-$nome = time() . ".mp4";
+$nome = time().".mp4";
+
 
 $caminho = $pasta . $nome;
 

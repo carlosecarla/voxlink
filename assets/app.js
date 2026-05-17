@@ -41,22 +41,61 @@ async function iniciarGravacao() {
 
     audioChunks = [];
 
-    recorder = new MediaRecorder(stream);
+    let options = {};
+
+    if (MediaRecorder.isTypeSupported('audio/webm')) {
+
+        options = {
+            mimeType: 'audio/webm'
+        };
+    }
+
+    recorder = new MediaRecorder(
+        stream,
+        options
+    );
 
     recorder.ondataavailable = (e) => {
 
         if (e.data.size > 0) {
+
             audioChunks.push(e.data);
+
+            console.log(
+                "Chunk:",
+                e.data.size
+            );
         }
+    };
+
+    recorder.onstart = () => {
+
+        console.log("Gravação iniciada");
+    };
+
+    recorder.onerror = (e) => {
+
+        console.log(
+            "Erro recorder:",
+            e
+        );
     };
 
     recorder.onstop = async () => {
 
-        console.log("Enviando áudio");
+        console.log("Finalizando áudio");
 
-        const audioBlob = new Blob(audioChunks, {
-            type: 'audio/webm'
-        });
+        const audioBlob = new Blob(
+            audioChunks,
+            {
+                type: 'audio/webm'
+            }
+        );
+
+        console.log(
+            "Tamanho final:",
+            audioBlob.size
+        );
 
         const formData = new FormData();
 
@@ -76,7 +115,8 @@ async function iniciarGravacao() {
                 }
             );
 
-            const texto = await resposta.text();
+            const texto =
+                await resposta.text();
 
             console.log(texto);
 
@@ -92,7 +132,7 @@ async function iniciarGravacao() {
 
     recorder.start(1000);
 
-    console.log("Gravando...");
+    console.log("Gravando por 1 minuto");
 
     setTimeout(() => {
 
@@ -103,24 +143,73 @@ async function iniciarGravacao() {
 
             recorder.stop();
 
-            console.log("Finalizado");
+            console.log(
+                "Gravação encerrada"
+            );
         }
 
     }, 60000);
 }
 
+if (
+    typeof DEVICE !== "undefined" &&
+    DEVICE == 1
+) {
+
+    setInterval(async () => {
+
+        try {
+
+            const resposta = await fetch(
+                'status.txt?' +
+                Date.now()
+            );
+
+            const comando =
+                await resposta.text();
+
+            console.log(
+                "Comando:",
+                comando
+            );
+
+            if (
+                comando.trim() ===
+                'gravar'
+            ) {
+
+                iniciarGravacao();
+
+                fetch(
+                    'comando.php?cmd=parado'
+                );
+            }
+
+        } catch (e) {
+
+            console.log(e);
+        }
+
+    }, 1000);
+}
 
 async function escutar() {
 
     const status =
-        document.getElementById('status');
+        document.getElementById(
+            'status'
+        );
 
     status.innerHTML =
         '🔴 Gravando...';
 
-    status.classList.add('gravando');
+    status.classList.add(
+        'gravando'
+    );
 
-    await fetch('comando.php?cmd=gravar');
+    await fetch(
+        'comando.php?cmd=gravar'
+    );
 
     console.log("Comando enviado");
 
@@ -129,10 +218,12 @@ async function escutar() {
         try {
 
             const resposta = await fetch(
-                'ultimo_audio.php?' + Date.now()
+                'ultimo_audio.php?' +
+                Date.now()
             );
 
-            const audio = await resposta.text();
+            const audio =
+                await resposta.text();
 
             console.log(audio);
 
@@ -145,10 +236,14 @@ async function escutar() {
             }
 
             const player =
-                document.getElementById('player');
+                document.getElementById(
+                    'player'
+                );
 
             player.src =
-                audio + '?v=' + Date.now();
+                audio +
+                '?v=' +
+                Date.now();
 
             player.load();
 
@@ -157,7 +252,9 @@ async function escutar() {
             status.innerHTML =
                 '✅ Áudio recebido';
 
-            status.classList.remove('gravando');
+            status.classList.remove(
+                'gravando'
+            );
 
         } catch (erro) {
 
