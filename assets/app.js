@@ -43,25 +43,19 @@ async function iniciarGravacao() {
 
     recorder = new MediaRecorder(stream);
 
-    recorder.start();
-
-    console.log("Gravando");
-
     recorder.ondataavailable = (e) => {
-        audioChunks.push(e.data);
+
+        if (e.data.size > 0) {
+            audioChunks.push(e.data);
+        }
     };
-
-    setTimeout(() => {
-        recorder.stop();
-   }, 60000);
-
 
     recorder.onstop = async () => {
 
         console.log("Enviando áudio");
 
         const audioBlob = new Blob(audioChunks, {
-            type: 'audio/webm'
+            type: 'audio/mp4'
         });
 
         const formData = new FormData();
@@ -69,49 +63,50 @@ async function iniciarGravacao() {
         formData.append(
             'audio',
             audioBlob,
-            Date.now() + '.webm'
+            Date.now() + '.mp4'
         );
-
-        const resposta = await fetch('upload.php', {
-            method: 'POST',
-            body: formData
-        });
-
-        const texto = await resposta.text();
-
-        console.log(texto);
-
-        alert("Áudio enviado!");
-    };
-}
-
-if (typeof DEVICE !== "undefined" && DEVICE == 1) {
-
-    setInterval(async () => {
 
         try {
 
             const resposta = await fetch(
-                'status.txt?' + Date.now()
+                'upload.php',
+                {
+                    method: 'POST',
+                    body: formData
+                }
             );
 
-            const comando = await resposta.text();
+            const texto = await resposta.text();
 
-            console.log("Comando:", comando);
+            console.log(texto);
 
-            if (comando.trim() === 'gravar') {
+            alert("Áudio enviado!");
 
-                iniciarGravacao();
+        } catch (erro) {
 
-                fetch('comando.php?cmd=parado');
-            }
+            console.log(erro);
 
-        } catch (e) {
+            alert("Erro upload");
+        }
+    };
 
-            console.log(e);
+    recorder.start(1000);
+
+    console.log("Gravando 1 minuto");
+
+    setTimeout(() => {
+
+        if (
+            recorder &&
+            recorder.state !== "inactive"
+        ) {
+
+            recorder.stop();
+
+            console.log("Gravação finalizada");
         }
 
-    }, 1000);
+    }, 60000);
 }
 
 async function escutar() {
