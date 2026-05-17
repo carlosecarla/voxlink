@@ -27,7 +27,7 @@ Dispositivo <?= $device ?>
 <?php if($device == 2): ?>
 
 <button onclick="escutar()">
-🎤 ESCUTAR
+🎤 ESCUTAaaaa
 </button>
 
 <audio
