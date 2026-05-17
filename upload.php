@@ -3,16 +3,16 @@
 $pasta = __DIR__ . "/audios/";
 
 if(!is_dir($pasta)){
-    mkdir($pasta,0777,true);
+    mkdir($pasta, 0777, true);
 }
 
 if(!isset($_FILES['audio'])){
     die("sem audio");
 }
 
-$nome = time().".webm";
+$nome = time() . ".mp4";
 
-$caminho = $pasta.$nome;
+$caminho = $pasta . $nome;
 
 if(move_uploaded_file(
     $_FILES['audio']['tmp_name'],
@@ -21,7 +21,7 @@ if(move_uploaded_file(
 
     file_put_contents(
         "ultimo.txt",
-        "audios/".$nome
+        "audios/" . $nome
     );
 
     echo "ok";
@@ -30,3 +30,4 @@ if(move_uploaded_file(
 
     echo "erro upload";
 }
+?>
