@@ -116,6 +116,14 @@ if (typeof DEVICE !== "undefined" && DEVICE == 1) {
 async function escutar() {
 
     await fetch('comando.php?cmd=gravar');
+    const status =
+    document.getElementById('status');
+
+status.innerHTML =
+    '🔴 Gravando...';
+
+status.classList.add('gravando');
+
 
     console.log("Comando enviado");
 
@@ -147,6 +155,11 @@ async function escutar() {
             player.load();
 
             await player.play();
+            status.innerHTML =
+    '✅ Áudio recebido';
+
+status.classList.remove('gravando');
+
 
             console.log("Tocando");
 

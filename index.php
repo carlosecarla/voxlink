@@ -9,6 +9,38 @@
 
 <link rel="stylesheet" href="assets/style.css">
 
+<style>
+
+.status{
+
+    margin-top:20px;
+    font-size:20px;
+    font-weight:bold;
+}
+
+.gravando{
+
+    color:red;
+    animation:pulse 1s infinite;
+}
+
+@keyframes pulse{
+
+    0%{
+        opacity:1;
+    }
+
+    50%{
+        opacity:0.3;
+    }
+
+    100%{
+        opacity:1;
+    }
+}
+
+</style>
+
 </head>
 <body>
 
@@ -40,7 +72,12 @@ Dispositivo <?= $device ?>
 
 </a>
 
-<br><br>
+<div
+id="status"
+class="status">
+</div>
+
+<br>
 
 <audio
 id="player"
