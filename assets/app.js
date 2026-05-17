@@ -115,15 +115,15 @@ if (typeof DEVICE !== "undefined" && DEVICE == 1) {
 
 async function escutar() {
 
-    await fetch('comando.php?cmd=gravar');
     const status =
-    document.getElementById('status');
+        document.getElementById('status');
 
-status.innerHTML =
-    '🔴 Gravando...';
+    status.innerHTML =
+        '🔴 Gravando...';
 
-status.classList.add('gravando');
+    status.classList.add('gravando');
 
+    await fetch('comando.php?cmd=gravar');
 
     console.log("Comando enviado");
 
@@ -141,7 +141,8 @@ status.classList.add('gravando');
 
             if (!audio.trim()) {
 
-                alert("Nenhum áudio encontrado");
+                status.innerHTML =
+                    '❌ Nenhum áudio';
 
                 return;
             }
@@ -155,21 +156,19 @@ status.classList.add('gravando');
             player.load();
 
             await player.play();
+
             status.innerHTML =
-    '✅ Áudio recebido';
+                '✅ Áudio recebido';
 
-status.classList.remove('gravando');
-
-
-            console.log("Tocando");
+            status.classList.remove('gravando');
 
         } catch (erro) {
 
             console.log(erro);
 
-            alert("Erro ao tocar áudio");
+            status.innerHTML =
+                '❌ Erro no áudio';
         }
 
     }, 8000);
 }
-
