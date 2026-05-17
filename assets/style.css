@@ -1,0 +1,46 @@
+body{
+    margin:0;
+    background:#0f172a;
+    color:white;
+    font-family:Arial;
+}
+
+.container{
+    height:100vh;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+}
+
+h1{
+    font-size:45px;
+    margin-bottom:10px;
+}
+
+h2{
+    color:#94a3b8;
+}
+
+button{
+    margin-top:30px;
+    width:250px;
+    padding:18px;
+    border:none;
+    border-radius:18px;
+    background:#22c55e;
+    color:white;
+    font-size:20px;
+    cursor:pointer;
+}
+
+audio{
+    margin-top:30px;
+    width:90%;
+}
+
+.aguardando{
+    margin-top:20px;
+    color:#cbd5e1;
+}

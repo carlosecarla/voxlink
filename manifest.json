@@ -1,0 +1,16 @@
+{
+  "name": "VoxLink Recife",
+  "short_name": "VoxLink",
+  "start_url": "index.php?device=1",
+  "display": "standalone",
+  "background_color": "#f0f2f5",
+  "theme_color": "#1a73e8",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "https://flaticon.com",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
