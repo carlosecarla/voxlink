@@ -53,7 +53,8 @@ async function iniciarGravacao() {
 
     setTimeout(() => {
         recorder.stop();
-    }, 5000);
+   }, 60000);
+
 
     recorder.onstop = async () => {
 
